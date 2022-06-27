@@ -213,25 +213,25 @@ fwrite(table2, paste0(resPath, "Table_2_", Country, ".csv"))
 #-----------------------------------------------
 # Create table 3a
 #-----------------------------------------------
-table3a                      <- data.table(SITECODE       = character(),
-                                           Spec_1_Biomass = character(),
-                                           Spec_2_Biomass = character(),
-                                           Spec_3_Biomass = character(),
-                                           Spec_4_Biomass = character(),
-                                           Spec_5_Biomass = character(),
-                                           Rest_Biomass   = numeric())
+table3a                      <- data.table(SITECODE  = character(),
+                                           Spec_1_kg = character(),
+                                           Spec_2_kg = character(),
+                                           Spec_3_kg = character(),
+                                           Spec_4_kg = character(),
+                                           Spec_5_kg = character(),
+                                           Rest_kg   = numeric())
 
 for(iMPA in unique(dat$SITECODE)){
   subdat                    <- dat[SITECODE == iMPA,,]
   idx                       <- grep("LE_KG", names(subdat))
   a                         <- sort(colSums(subdat[, ..idx,]), decreasing=TRUE)
-  dt                        <- data.table(SITECODE       = iMPA,
-                                          Spec_1_Biomass = substr(names(a)[2], 7, 9),
-                                          Spec_2_Biomass = substr(names(a)[3], 7, 9),
-                                          Spec_3_Biomass = substr(names(a)[4], 7, 9),
-                                          Spec_4_Biomass = substr(names(a)[5], 7, 9),
-                                          Spec_5_Biomass = substr(names(a)[6], 7, 9),
-                                          Rest_Biomass   = round((sum(a[7:length(a)]) / a[1]) *100, digits=1))
+  dt                        <- data.table(SITECODE  = iMPA,
+                                          Spec_1_kg = substr(names(a)[2], 7, 9),
+                                          Spec_2_kg = substr(names(a)[3], 7, 9),
+                                          Spec_3_kg = substr(names(a)[4], 7, 9),
+                                          Spec_4_kg = substr(names(a)[5], 7, 9),
+                                          Spec_5_kg = substr(names(a)[6], 7, 9),
+                                          Rest_kg   = round((sum(a[7:length(a)]) / a[1]) *100, digits=1))
   table3a                   <- rbind(table3a, dt)
 } # end iMPA-loop
 
@@ -241,25 +241,25 @@ fwrite(table3a, paste0(resPath, "Table_3a_", Country, ".csv"))
 #-----------------------------------------------
 # Create table 3b
 #-----------------------------------------------
-table3b                      <- data.table(SITECODE     = character(),
-                                           Spec_1_Value = character(),
-                                           Spec_2_Value = character(),
-                                           Spec_3_Value = character(),
-                                           Spec_4_Value = character(),
-                                           Spec_5_Value = character(),
-                                           Rest_Value   = numeric())
+table3b                      <- data.table(SITECODE    = character(),
+                                           Spec_1_euro = character(),
+                                           Spec_2_euro = character(),
+                                           Spec_3_euro = character(),
+                                           Spec_4_euro = character(),
+                                           Spec_5_euro = character(),
+                                           Rest_euro   = numeric())
 
 for(iMPA in unique(dat$SITECODE)){
   subdat                    <- dat[SITECODE == iMPA,,]
   idx                       <- grep("LE_EURO", names(subdat))
   a                         <- sort(colSums(subdat[, ..idx,]), decreasing=TRUE)
   dt                        <- data.table(SITECODE     = iMPA,
-                                          Spec_1_Value = substr(names(a)[2], 9, 11),
-                                          Spec_2_Value = substr(names(a)[3], 9, 11),
-                                          Spec_3_Value = substr(names(a)[4], 9, 11),
-                                          Spec_4_Value = substr(names(a)[5], 9, 11),
-                                          Spec_5_Value = substr(names(a)[6], 9, 11),
-                                          Rest_Value   = round((sum(a[7:length(a)]) / a[1]) *100, digits=1))
+                                          Spec_1_euro = substr(names(a)[2], 9, 11),
+                                          Spec_2_euro = substr(names(a)[3], 9, 11),
+                                          Spec_3_euro = substr(names(a)[4], 9, 11),
+                                          Spec_4_euro = substr(names(a)[5], 9, 11),
+                                          Spec_5_euro = substr(names(a)[6], 9, 11),
+                                          Rest_euro   = round((sum(a[7:length(a)]) / a[1]) *100, digits=1))
   table3b                   <- rbind(table3b, dt)
 } # end iMPA-loop
 
