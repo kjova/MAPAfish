@@ -58,6 +58,7 @@ dir.create(RdataPath,  showWarnings = FALSE)
 MPAs1                         <- st_read(paste0(polyPath, "MPA_polygons1.shp"))
 MPAs2                         <- st_read(paste0(polyPath, "MPA_polygons2.shp"))
 MPAs                          <- rbind(MPAs1, MPAs2)
+MPAs                          <- st_transform(MPAs, 4326)
 rm(MPAs1, MPAs2)
 
 #-----------------------------------------------
@@ -298,7 +299,7 @@ m_list                       <- list.files(path = intPath, pattern= "EFLA", full
 dat                          <- rbindlist(lapply(m_list, readRDS), fill=T)
 # Change NA to 0 (only numeric columns, the other one doesnt work when there is NA's in timedate columns)
 for(j in seq_along(dat)){
-  set(dat3, i = which(is.na(dat3[[j]]) & is.numeric(dat3)), j = j, value = 0)
+  set(dat, i = which(is.na(dat[[j]]) & is.numeric(dat)), j = j, value = 0)
 } 
 
 # Aggregate data and write to results folder
