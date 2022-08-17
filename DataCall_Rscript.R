@@ -18,10 +18,10 @@ rm(list = ls())
 ### Before running this code the following needs to be done:
 ##   - Cleaned tacsatEflalo files for all the years should be in the RdataPath. Each file 
 ##     should be saved as tacsatEflalo_"Year".rds (eg. tacsatEflalo_2019.rds)
-##     These files  should be in the standard tacsatEflalo format and contain merged kg and EURO for all
+##     These files  should be in the standard tacsatEflalo format and contain KG and EURO for all
 ##     species. This can be obtained using the countries own procedures or using 
-##     the 0_CreateTacsatEflalo.R script. 
-##   - Furthermore the cleaned tacsatEflalo should contain these columns:
+##     the script here: https://github.com/ices-eg/ICES-VMS-and-Logbook-Data-Call/blob/main/2_eflalo_tacsat_analysis.R (Note to remove line 260 to keep species-specific catch information). 
+##   - In addition, the cleaned tacsatEflalo should contain these columns:
 ##     "VE_REF", "SI_LATI", "SI_LONG", "SI_DATE", "SI_TIME", "SI_SP", "SI_HE", "SI_STATE", "SI_DATIM", "INTV", "FT_REF"
 ##   - Cleaned eflalo files should be in the RdataPath, saved as cleanEflalo_"Year".rds (eg. cleanEflalo_2019.rds)
 ##   - The polygon shapefiles should be downloaded and extracted into the folder directed to by "polyPath"
@@ -55,10 +55,10 @@ dir.create(RdataPath,  showWarnings = FALSE)
 #-----------------------------------------------
 # Load MPA polygon data and merge to 1 file
 #-----------------------------------------------
-MPAs1                         <- st_read(paste0(polyPath, "MPA_polygons1.shp"))
-MPAs2                         <- st_read(paste0(polyPath, "MPA_polygons2.shp"))
+MPAs1                         <- st_read(paste0(polyPath, "MPA_polygons1_4326.shp"))
+MPAs2                         <- st_read(paste0(polyPath, "buffer_polygons_4326.shp"))
 MPAs                          <- rbind(MPAs1, MPAs2)
-MPAs                          <- st_transform(MPAs, 4326)
+MPAs                          <- st_transform(MPAs, 4326) # should be superfluous as the (new) MPAs shapefiles already have this projection
 rm(MPAs1, MPAs2)
 
 #-----------------------------------------------
