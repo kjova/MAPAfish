@@ -330,7 +330,7 @@ for(iYear in yearsToSubmit){
 } # end iYear-loop
 
 # Save as csv-file
-fwrite(table4a, paste0(resPath, "Table_4a_", Country, ".csv"))
+fwrite(Table4a, paste0(resPath, "Table_4a_", Country, ".csv"))
 rm(dat, tab4a, Table4a)
 
 #-----------------------------------------------
