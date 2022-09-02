@@ -363,3 +363,108 @@ rm(dat, Table4b, tab4b)
 #-----------------------------------------------
 
 
+
+
+
+
+################################################
+# New code to create tables 3a and 3b in a less computational-demanding way
+#
+#  Note: if you have successfully created tables 3a and 3b using the code above, there is no need to also run this part of the code.
+################################################
+# #-----------------------------------------------
+# # Create annual tables with total catch /revenue per species
+# #-----------------------------------------------
+# for(iYear in yearsToSubmit) {
+#   MPAdat                      <- readRDS(paste0(intPath, "MPA_", iYear, ".rds"))
+#   kg                          <- c(grep("LE_KG_", colnames(MPAdat)), ncol(MPAdat))
+#   kgs                         <- MPAdat[,..kg,]
+#   kgs                         <- kgs[, lapply(.SD, sum, na.rm=TRUE), by="SITECODE", .SDcols=colnames(kgs)[1:ncol(kgs)-1]] 
+#   kgs$Year                    <- iYear
+#   saveRDS(kgs, file=paste0(intPath, "KGS_", iYear, ".rds"))
+#   
+#   eur                         <- c(grep("LE_EURO", colnames(MPAdat)), ncol(MPAdat))
+#   euros                       <- MPAdat[,..eur]
+#   euros                       <- euros[, lapply(.SD, sum, na.rm=TRUE), by="SITECODE", .SDcols=colnames(euros)[1:ncol(euros)-1]] 
+#   euros$Year                  <- iYear
+#   saveRDS(euros, file=paste0(intPath, "EUROS_", iYear, ".rds"))
+# } # end iYear-loop
+# 
+# #-----------------------------------------------
+# # Create Table 3a
+# #-----------------------------------------------
+# ## Read in data
+# m_list                       <- list.files(path = intPath, pattern= "KGS_", full.names = T)
+# dat                          <- rbindlist(lapply(m_list, readRDS), fill=T)
+# ## Set NA's to 0 
+# dat[is.na(dat)]              <-  0
+# 
+# ## Create base table
+# table3a                      <- data.table(SITECODE  = character(),
+#                                            Spec_1_kg = character(),
+#                                            Spec_2_kg = character(),
+#                                            Spec_3_kg = character(),
+#                                            Spec_4_kg = character(),
+#                                            Spec_5_kg = character(),
+#                                            Rest_kg   = numeric())
+# 
+# for(iMPA in unique(dat$SITECODE)){
+#   subdat                    <- dat[SITECODE == iMPA,,]
+#   idx                       <- grep("LE_KG", names(subdat))
+#   a                         <- sort(colSums(subdat[, ..idx,]), decreasing=TRUE)
+#   idx2                      <- grep("TOT", names(a))
+#   b                         <- a[-idx2]
+#   d                         <- b[!b==0]
+#   dt                        <- data.table(SITECODE  = iMPA,
+#                                           Spec_1_kg = substr(names(d)[1], 7, 9),
+#                                           Spec_2_kg = substr(names(d)[2], 7, 9),
+#                                           Spec_3_kg = substr(names(d)[3], 7, 9),
+#                                           Spec_4_kg = substr(names(d)[4], 7, 9),
+#                                           Spec_5_kg = substr(names(d)[5], 7, 9),
+#                                           Rest_kg   = round((sum(d[6:length(d)]) / a[idx2]) *100, digits=1))
+#   dt$Rest_kg [is.na(dt$Rest_kg)==TRUE] <- 0
+#   table3a                   <- rbind(table3a, dt)
+# } # end iMPA-loop
+# 
+# # Save as csv-file
+# fwrite(table3a, paste0(resPath, "Table_3a_", Country, ".csv"))
+# 
+# 
+# #-----------------------------------------------
+# # Create Table 3b
+# #-----------------------------------------------
+# ## Read in data
+# m_list                       <- list.files(path = intPath, pattern= "EUROS_", full.names = T)
+# dat                          <- rbindlist(lapply(m_list, readRDS), fill=T)
+# ## Set NA's to 0 
+# dat[is.na(dat)]              <-  0
+# 
+# ## Create base table
+# table3b                      <- data.table(SITECODE    = character(),
+#                                            Spec_1_euro = character(),
+#                                            Spec_2_euro = character(),
+#                                            Spec_3_euro = character(),
+#                                            Spec_4_euro = character(),
+#                                            Spec_5_euro = character(),
+#                                            Rest_euro   = numeric())
+# 
+# for(iMPA in unique(dat$SITECODE)){
+#   subdat                    <- dat[SITECODE == iMPA,,]
+#   idx                       <- grep("LE_EURO", names(subdat))
+#   a                         <- sort(colSums(subdat[, ..idx,]), decreasing=TRUE)
+#   idx2                      <- grep("TOT", names(a))
+#   b                         <- a[-idx2]
+#   d                         <- b[!b==0]
+#   dt                        <- data.table(SITECODE     = iMPA,
+#                                           Spec_1_euro = substr(names(d)[1], 9, 11),
+#                                           Spec_2_euro = substr(names(d)[2], 9, 11),
+#                                           Spec_3_euro = substr(names(d)[3], 9, 11),
+#                                           Spec_4_euro = substr(names(d)[4], 9, 11),
+#                                           Spec_5_euro = substr(names(d)[5], 9, 11),
+#                                           Rest_euro   = round((sum(d[6:length(d)]) / a[idx2]) *100, digits=1))
+#   dt$Rest_euro [is.na(dt$Rest_euro)==TRUE] <- 0
+#   table3b                   <- rbind(table3b, dt)
+# } # end iMPA-loop
+# 
+# # Save as csv-file
+# fwrite(table3b, paste0(resPath, "Table_3b_", Country, ".csv"))
